@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { 
   AppBar, Toolbar, Typography, Drawer, List, ListItem, ListItemIcon, ListItemText, 
-  IconButton, Box, useMediaQuery, useTheme, Divider, ListItemButton
+  IconButton, Box, useMediaQuery, useTheme, Divider, ListItemButton, Tooltip
 } from '@mui/material';
 import { 
   Menu as MenuIcon, Dashboard, ListAlt, ViewKanban, Logout, Add, Brightness4, Brightness7 
@@ -80,15 +80,6 @@ const Layout: React.FC = () => {
           </ListItem>
         ))}
       </List>
-      <Divider />
-      <List>
-        <ListItem disablePadding>
-          <ListItemButton onClick={logout}>
-            <ListItemIcon><Logout /></ListItemIcon>
-            <ListItemText primary="Logout" />
-          </ListItemButton>
-        </ListItem>
-      </List>
     </div>
   );
 
@@ -109,9 +100,16 @@ const Layout: React.FC = () => {
           <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
             {user?.full_name} ({user?.role})
           </Typography>
-          <IconButton sx={{ ml: 1 }} onClick={toggleColorMode} color="inherit">
-            {theme.palette.mode === 'dark' ? <Brightness7 /> : <Brightness4 />}
-          </IconButton>
+          <Tooltip title="Toggle light/dark theme">
+            <IconButton sx={{ ml: 1 }} onClick={toggleColorMode} color="inherit">
+              {theme.palette.mode === 'dark' ? <Brightness7 /> : <Brightness4 />}
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Logout">
+            <IconButton sx={{ ml: 1 }} onClick={logout} color="inherit">
+              <Logout />
+            </IconButton>
+          </Tooltip>
         </Toolbar>
       </AppBar>
       <Box
