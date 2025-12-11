@@ -109,7 +109,7 @@ const AgileBoard: React.FC = () => {
   };
 
   return (
-    <Box sx={{ minHeight: '100vh', p: 3 }}>
+    <Box sx={{ p: 3 }}>
       <Box sx={{ display: 'flex', alignItems: 'baseline', mb: 4 }}>
         <Typography variant="h4" sx={{ fontWeight: 'bold', mr: 1 }}>
           Task Board
@@ -120,14 +120,24 @@ const AgileBoard: React.FC = () => {
       </Box>
 
       <DragDropContext onDragEnd={onDragEnd}>
-        <Box sx={{ display: 'flex', gap: 3, overflowX: 'auto', pb: 2 }}>
+        <Box sx={{ 
+          display: 'flex', 
+          flexDirection: { xs: 'column', md: 'row' },
+          gap: 3, 
+          overflowX: { xs: 'hidden', md: 'auto' },
+          pb: 2 
+        }}>
           {Object.entries(columns).map(([columnId, tasks]) => (
-            <Box key={columnId} sx={{ minWidth: 280, width: 300, flexShrink: 0 }}>
+            <Box key={columnId} sx={{ 
+              minWidth: { xs: '100%', md: 280 },
+              width: { xs: '100%', md: 300 },
+              flexShrink: 0 
+            }}>
               <Paper 
                 sx={{ 
                   p: 2, 
                   bgcolor: (theme) => theme.palette.mode === 'dark' ? '#1e1e1e' : '#f4f5f7',
-                  minHeight: 500,
+                  minHeight: { xs: 'auto', md: 500 },
                   borderRadius: 2,
                   border: 1,
                   borderColor: 'divider'
@@ -160,7 +170,12 @@ const AgileBoard: React.FC = () => {
                     <Box
                       ref={provided.innerRef}
                       {...provided.droppableProps}
-                      sx={{ minHeight: 400, display: 'flex', flexDirection: 'column', gap: 2 }}
+                      sx={{ 
+                        minHeight: { xs: 100, md: 400 }, 
+                        display: 'flex', 
+                        flexDirection: 'column', 
+                        gap: 2 
+                      }}
                     >
                       {tasks.map((task, index) => (
                         <Draggable key={task._id} draggableId={task._id} index={index}>
