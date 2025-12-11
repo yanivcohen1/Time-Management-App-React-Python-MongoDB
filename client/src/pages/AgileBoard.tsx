@@ -129,9 +129,8 @@ const AgileBoard: React.FC = () => {
         }}>
           {Object.entries(columns).map(([columnId, tasks]) => (
             <Box key={columnId} sx={{ 
-              minWidth: { xs: '100%', md: 280 },
-              width: { xs: '100%', md: 300 },
-              flexShrink: 0 
+              flex: 1,
+              minWidth: { xs: '100%', md: 250 },
             }}>
               <Paper 
                 sx={{ 

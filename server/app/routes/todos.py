@@ -59,11 +59,32 @@ async def get_todos(
         "pages": (total + size - 1) // size
     }
 
+@router.get("/stats/status")
+async def get_status_stats(current_user: User = Depends(get_current_user)):
+    pipeline = [
+        {"$match": {"user.$id": current_user.id}},
+        {"$group": {"_id": "$status", "count": {"$sum": 1}}}
+    ]
+    stats = await Todo.aggregate(pipeline).to_list()
+    # Ensure all statuses are present
+    result = {s.value: 0 for s in Status}
+    for s in stats:
+        if s["_id"] in result:
+            result[s["_id"]] = s["count"]
+    return result
+
 @router.get("/stats/workload")
 async def get_workload_stats(current_user: User = Depends(get_current_user)):
     pipeline = [
         {"$match": {"user.$id": current_user.id, "due_date": {"$ne": None}}},
-        {"$group": {"_id": {"$dateToString": {"format": "%Y-%m-%d", "date": "$due_date"}}, "count": {"$sum": 1}}},
+        {"$group": {
+            "_id": {"$dateToString": {"format": "%Y-%m-%d", "date": "$due_date"}},
+            "total": {"$sum": 1},
+            "backlog": {"$sum": {"$cond": [{"$eq": ["$status", "BACKLOG"]}, 1, 0]}},
+            "pending": {"$sum": {"$cond": [{"$eq": ["$status", "PENDING"]}, 1, 0]}},
+            "in_progress": {"$sum": {"$cond": [{"$eq": ["$status", "IN_PROGRESS"]}, 1, 0]}},
+            "completed": {"$sum": {"$cond": [{"$eq": ["$status", "COMPLETED"]}, 1, 0]}}
+        }},
         {"$sort": {"_id": 1}}
     ]
     stats = await Todo.aggregate(pipeline).to_list()
