@@ -94,6 +94,29 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("UserPolicy", policy => policy.RequireRole("User", "Admin"));
 });
 
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter());
+        options.JsonSerializerOptions.PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.SnakeCaseLower;
+    });
+
+// Register TodoService
+if (databaseProvider == "MongoDB")
+{
+    var mongoConnection = builder.Configuration.GetConnectionString("MongoConnection");
+    var databaseName = mongoConnection?.Split('/').Last() ?? "netcore_auth_xunit";
+    builder.Services.AddScoped<ITodoService>(sp => new MongoTodoService(mongoConnection!, databaseName));
+}
+else
+{
+    // Fallback or implementation for SQL if needed, for now throwing or using MongoService if connection string available
+    // Assuming MongoDB is the primary target for Todos as per instructions
+    var mongoConnection = builder.Configuration.GetConnectionString("MongoConnection") ?? "mongodb://localhost:27017/netcore_auth_xunit";
+    var databaseName = mongoConnection.Split('/').Last();
+    builder.Services.AddScoped<ITodoService>(sp => new MongoTodoService(mongoConnection, databaseName));
+}
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -111,61 +134,7 @@ app.UseCors("AllowFrontend");
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapPost("/api/auth/login", (LoginRequest request, IUserService userService, ITokenService tokenService) =>
-{
-    var user = userService.ValidateCredentials(request.Username, request.Password);
-    return user is null
-        ? Results.Unauthorized()
-        : Results.Ok(tokenService.CreateToken(user));
-}).AllowAnonymous();
-
-app.MapGet("/api/admin/reports", [Authorize(Roles = "Admin")] (ClaimsPrincipal principal, IUserService userService) =>
-{
-    var username = principal.Identity?.Name ?? "unknown";
-    var user = userService.GetUser(username);
-    var payload = new
-    {
-        Owner = username,
-        Role = user?.Role,
-        GeneratedAtUtc = DateTime.UtcNow,
-        Items = new[] { "Quarterly financials", "Infrastructure status" }
-    };
-
-    return Results.Ok(payload);
-});
-
-app.MapGet("/api/users/profile", [Authorize] (ClaimsPrincipal principal, IUserService userService) =>
-{
-    var username = principal.Identity?.Name;
-    if (username is null)
-    {
-        return Results.Problem("A valid identity was not found for this request.", statusCode: StatusCodes.Status400BadRequest);
-    }
-
-    var user = userService.GetUser(username);
-    return user is null
-        ? Results.NotFound()
-        : Results.Ok(new { user.Username, user.Role });
-});
-
-
-app.MapGet("/api/reports/daily", [Authorize(Policy = "UserPolicy")] () => // UserPolicy allows both User and Admin roles
-{
-    var items = new[]
-    {
-        new { Id = 1, Title = "Daily sales summary" },
-        new { Id = 2, Title = "Active sessions" }
-    };
-
-    return Results.Ok(items);
-});
-
-// Health check endpoint, no authentication required add async
-app.MapGet("/api/health", async () =>
-{
-    await Task.Yield(); // Asynchronous hook for future health probes
-    return Results.Ok(new { status = "Healthy" });
-}); // .AllowAnonymous();
+app.MapControllers();
 
 app.Run();
 

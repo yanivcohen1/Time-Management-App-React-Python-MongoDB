@@ -15,36 +15,45 @@ public class MongoUserService : IUserService
         var database = client.GetDatabase(databaseName);
         _users = database.GetCollection<ApplicationUser>("users");
 
-        // Seed data if collection is empty
-        if (_users.CountDocuments(FilterDefinition<ApplicationUser>.Empty) == 0)
-        {
-            SeedUsers();
-        }
+        EnsureUsers();
     }
 
-    private void SeedUsers()
+    private void EnsureUsers()
     {
         var hasher = new PasswordHasher<ApplicationUser>();
 
-        var users = new[]
+        var usersToEnsure = new[]
         {
-            new ApplicationUser
-            {
-                Id = 1,
-                Username = "admin@example.com",
-                Role = "Admin",
-                PasswordHash = hasher.HashPassword(new ApplicationUser { Username = "admin@example.com", Role = "Admin", Id = 1, PasswordHash = "" }, "Admin123!")
-            },
-            new ApplicationUser
-            {
-                Id = 2,
-                Username = "user@example.com",
-                Role = "User",
-                PasswordHash = hasher.HashPassword(new ApplicationUser { Username = "user@example.com", Role = "User", Id = 2, PasswordHash = "" }, "User123!")
-            }
+            new { Username = "admin@todo.dev", Role = "Admin", Password = "ChangeMe123!", FullName = "Admin User" },
+            new { Username = "user@todo.dev", Role = "User", Password = "ChangeMe123!", FullName = "Regular User" }
         };
 
-        _users.InsertMany(users);
+        foreach (var u in usersToEnsure)
+        {
+            var existingUser = _users.Find(x => x.Username == u.Username).FirstOrDefault();
+            
+            var user = existingUser ?? new ApplicationUser 
+            { 
+                Username = u.Username, 
+                Role = u.Role, 
+                PasswordHash = "",
+                FullName = u.FullName
+            };
+            
+            // Update properties
+            user.Role = u.Role;
+            user.FullName = u.FullName;
+            user.PasswordHash = hasher.HashPassword(user, u.Password);
+
+            if (existingUser == null)
+            {
+                _users.InsertOne(user);
+            }
+            else
+            {
+                _users.ReplaceOne(x => x.Id == user.Id, user);
+            }
+        }
     }
 
     public ApplicationUser? ValidateCredentials(string username, string password)

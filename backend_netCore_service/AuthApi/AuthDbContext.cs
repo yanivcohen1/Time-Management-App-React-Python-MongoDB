@@ -19,17 +19,19 @@ public class AuthDbContext : DbContext
         modelBuilder.Entity<ApplicationUser>().HasData(
             new ApplicationUser
             {
-                Id = 1,
-                Username = "admin@example.com",
+                Id = "1",
+                Username = "admin@todo.dev",
                 Role = "Admin",
-                PasswordHash = hasher.HashPassword(new ApplicationUser { Username = "admin@example.com", Role = "Admin", Id = 1, PasswordHash = "" }, "Admin123!")
+                PasswordHash = hasher.HashPassword(new ApplicationUser { Username = "admin@todo.dev", Role = "Admin", Id = "1", PasswordHash = "" }, "ChangeMe123!"),
+                FullName = "Admin User"
             },
             new ApplicationUser
             {
-                Id = 2,
-                Username = "user@example.com",
+                Id = "2",
+                Username = "user@todo.dev",
                 Role = "User",
-                PasswordHash = hasher.HashPassword(new ApplicationUser { Username = "user@example.com", Role = "User", Id = 2, PasswordHash = "" }, "User123!")
+                PasswordHash = hasher.HashPassword(new ApplicationUser { Username = "user@todo.dev", Role = "User", Id = "2", PasswordHash = "" }, "ChangeMe123!"),
+                FullName = "Regular User"
             }
         );
     }
