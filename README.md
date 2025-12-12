@@ -38,7 +38,7 @@ The solution consists of three main components:
 *   **Framework**: FastAPI
 *   **Database**: MongoDB (via Motor(Async MongoDB), Beanie ODM)
 *   **Authentication**: JWT
-*   Configuration: YAML-based settings
+*   **Configuration**: YAML-based settings
 *   **Testing**: Pytest + TestClient
 *   **Swagger**: API Documentation with Swagger
 
