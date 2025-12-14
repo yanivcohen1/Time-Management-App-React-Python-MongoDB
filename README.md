@@ -137,7 +137,7 @@ All commands are run from the `client/` directory using `pnpm`.
 <img width="2633" height="1345" alt="image" src="https://github.com/user-attachments/assets/5708a72f-7c29-46b4-ad91-46b91428b6ff" />
 
 ## Ligth mode
-<img width="2276" height="1709" alt="image" src="https://github.com/user-attachments/assets/bcf05515-a81a-46f4-9ffa-a53091aec02a" />
+<img width="1965" height="1797" alt="image" src="https://github.com/user-attachments/assets/af34249e-9a0d-4417-b546-07214f4db215" />
 
 ## Mobile mode
 <img width="1034" height="1888" alt="image" src="https://github.com/user-attachments/assets/7ed3a206-3d2f-491a-bc39-8593fdd4eb3e" />
