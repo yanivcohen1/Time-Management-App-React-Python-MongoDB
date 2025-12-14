@@ -200,7 +200,8 @@ const AgileBoard: React.FC = () => {
                                 border: 1,
                                 borderColor: 'divider',
                                 '&:hover': {
-                                  bgcolor: 'action.hover'
+                                  bgcolor: 'action.hover',
+                                  cursor: 'grab'
                                 }
                               }}
                             >
