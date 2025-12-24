@@ -131,7 +131,7 @@ All commands are run from the `client/` directory using `pnpm`.
 <img width="2357" height="1641" alt="image" src="https://github.com/user-attachments/assets/c3b693db-2a38-4000-b42d-9d33a7cb59d2" />
 
 ## Track Status
-<img width="2621" height="1751" alt="image" src="https://github.com/user-attachments/assets/836d9c90-868d-4afa-a324-023965696765" />
+<img width="2640" height="1772" alt="image" src="https://github.com/user-attachments/assets/e5df594a-e7ca-4680-8154-581ab42db6b1" />
 
 ## Agile Board
 <img width="2359" height="1590" alt="image" src="https://github.com/user-attachments/assets/5adff857-bb68-4a87-977c-8374196da52d" />
