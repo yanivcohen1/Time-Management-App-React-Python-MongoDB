@@ -27,7 +27,6 @@ const Login: React.FC = () => {
       });
       navigate('/');
     } catch (err: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
-      console.error('Login failed', err);
       setError('Login failed: ' + (err.response?.data?.detail || 'Unknown error'));
     }
   };

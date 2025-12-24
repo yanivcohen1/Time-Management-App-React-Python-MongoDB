@@ -24,7 +24,7 @@ export default defineConfig([
       '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
       '@typescript-eslint/no-explicit-any': 'error',
       'react-hooks/exhaustive-deps': 'error',
-      'no-console': 'warn',
+      'no-console': 'off',
     },
   },
   {

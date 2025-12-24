@@ -18,26 +18,41 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | null>(null);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(null);
-  const [isLoading, setIsLoading] = useState(() => !!localStorage.getItem('token'));
+  const [user, setUser] = useState<User | null>(() => {
+    const token = localStorage.getItem('token');
+    const userData = localStorage.getItem('user');
+    return token && userData ? JSON.parse(userData) : null;
+  });
+  const [isLoading, setIsLoading] = useState(() => {
+    const token = localStorage.getItem('token');
+    const userData = localStorage.getItem('user');
+    return token !== null && userData === null;
+  });
 
   const logout = () => {
     localStorage.removeItem('token');
+    localStorage.removeItem('user');
     setUser(null);
   };
 
   useEffect(() => {
     const token = localStorage.getItem('token');
-    if (token) {
+    if (token && !user) {
       api.get('/auth/me')
-        .then(res => setUser(res.data))
-        .catch(() => logout())
+        .then(res => {
+          setUser(res.data);
+          localStorage.setItem('user', JSON.stringify(res.data));
+        })
+        .catch(() => {
+          // Don't logout on failure, just don't set user
+        })
         .finally(() => setIsLoading(false));
     }
-  }, []);
+  }, [user]);
 
   const login = (token: string, userData: User) => {
     localStorage.setItem('token', token);
+    localStorage.setItem('user', JSON.stringify(userData));
     setUser(userData);
   };
 
