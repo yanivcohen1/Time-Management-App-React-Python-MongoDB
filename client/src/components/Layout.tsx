@@ -10,7 +10,7 @@ import {
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useColorMode } from '../context/ColorModeContext';
-import { useAdmin } from '../context/AdminContext';
+// import { useAdmin } from '../context/AdminContext';
 import LoadingBar from 'react-top-loading-bar';
 import { useSnackbar } from 'notistack';
 import { setupInterceptors } from '../api/axios';
@@ -26,7 +26,7 @@ const Layout: React.FC = () => {
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [adminOpen, setAdminOpen] = useState(false);
   const { logout, user } = useAuth();
-  const { selectedUserName } = useAdmin();
+  // const { selectedUserName } = useAdmin();
   const navigate = useNavigate();
   const location = useLocation();
   const [progress, setProgress] = useState(0);
@@ -53,8 +53,9 @@ const Layout: React.FC = () => {
   const drawer = (
     <div>
       <Toolbar>
+        <CheckCircleOutline sx={{ color: '#2196f3', mr: 1 }} />
         <Typography variant="h6" noWrap component="div">
-          Todo App
+          Agile Tasks
         </Typography>
       </Toolbar>
       <Divider />
@@ -134,7 +135,7 @@ const Layout: React.FC = () => {
   return (
     <Box sx={{ display: 'flex' }}>
       <LoadingBar color="#ff0000" progress={progress} onLoaderFinished={() => setProgress(0)} />
-      <AppBar position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
+      <AppBar position="fixed" sx={{ zIndex: isMobile ? 1000 : (theme) => theme.zIndex.drawer + 1 }}>
         <Toolbar>
           <IconButton
             color="inherit"
@@ -145,27 +146,15 @@ const Layout: React.FC = () => {
           >
             <MenuIcon />
           </IconButton>
-          <Box sx={{ 
-            display: { xs: 'none', sm: 'flex' }, 
-            alignItems: 'center', 
-            mr: 2, 
-            position: 'absolute', 
-            left: 0, 
-            top: 0, 
-            width: drawerWidth, 
-            height: '100%', 
-            backgroundColor: theme.palette.background.paper,
-            zIndex: (theme) => theme.zIndex.drawer + 2
-          }}>
-            <CheckCircleOutline sx={{ color: '#2196f3', mr: 1, ml: 2 }} />
-            <Typography variant="h6" component="div" sx={{ fontWeight: 'bold', color: theme.palette.mode === 'light' ? 'black' : undefined }}>
-              Agile Tasks
-            </Typography>
-          </Box>
-              {selectedUserName && ` - ${selectedUserName}`}
-          <Divider orientation="vertical" flexItem sx={{ ml: 27, mr: 2, my: 2, borderColor: 'rgba(255, 255, 255, 0.3)' }} />
-           {selectedUserName && ` - ${selectedUserName}`}
-          <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
+          
+{/*           <Typography variant="h6" noWrap component="div">
+            {user?.full_name} ({user?.role})
+          </Typography> */}
+          
+
+          {/* <Divider orientation="vertical" flexItem sx={{ ml: isMobile ? 1 : 27, mr: 2, my: 2, borderColor: 'rgba(255, 255, 255, 0.3)' }} /> */}
+           {/* {selectedUserName && ` - ${selectedUserName}`} */}
+          <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1, ml: isMobile ? 1 : 28 }}>
             {user?.full_name} ({user?.role})
           </Typography>
 
@@ -194,7 +183,7 @@ const Layout: React.FC = () => {
             '& .MuiDrawer-paper': { 
               boxSizing: 'border-box', 
               width: drawerWidth,
-              zIndex: isMobile ? 1300 : 'auto' // High z-index for mobile overlay
+              zIndex: 1500
             },
           }}
         >
