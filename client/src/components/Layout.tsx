@@ -145,15 +145,26 @@ const Layout: React.FC = () => {
           >
             <MenuIcon />
           </IconButton>
-          <Box sx={{ display: 'flex', alignItems: 'center', mr: 2 }}>
-            <CheckCircleOutline sx={{ color: theme.palette.mode === 'light' ? 'black' : '#2196f3', mr: 1 }} />
+          <Box sx={{ 
+            display: { xs: 'none', sm: 'flex' }, 
+            alignItems: 'center', 
+            mr: 2, 
+            position: 'absolute', 
+            left: 0, 
+            top: 0, 
+            width: drawerWidth, 
+            height: '100%', 
+            backgroundColor: theme.palette.background.paper,
+            zIndex: (theme) => theme.zIndex.drawer + 2
+          }}>
+            <CheckCircleOutline sx={{ color: '#2196f3', mr: 1, ml: 2 }} />
             <Typography variant="h6" component="div" sx={{ fontWeight: 'bold', color: theme.palette.mode === 'light' ? 'black' : undefined }}>
               Agile Tasks
             </Typography>
           </Box>
- {selectedUserName && ` - ${selectedUserName}`}
-          <Divider orientation="vertical" flexItem sx={{ mr: 2, my: 2, borderColor: 'rgba(255, 255, 255, 0.3)' }} />
-          
+              {selectedUserName && ` - ${selectedUserName}`}
+          <Divider orientation="vertical" flexItem sx={{ ml: 27, mr: 2, my: 2, borderColor: 'rgba(255, 255, 255, 0.3)' }} />
+           {selectedUserName && ` - ${selectedUserName}`}
           <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
             {user?.full_name} ({user?.role})
           </Typography>
