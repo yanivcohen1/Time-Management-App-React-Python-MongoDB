@@ -183,7 +183,7 @@ const Layout: React.FC = () => {
             '& .MuiDrawer-paper': { 
               boxSizing: 'border-box', 
               width: drawerWidth,
-              ...(isMobile && { zIndex: 1500 })
+              zIndex: isMobile ? 1500 : 1300
             },
           }}
         >
